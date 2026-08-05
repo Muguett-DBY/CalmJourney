@@ -1,0 +1,52 @@
+:root {
+  --color-bg: #f6f4ef;
+  --color-ink: #2b3a3a;
+  --color-muted: #6b7f7f;
+  --color-accent: #4a8f7d;
+  --font-display: 'Georgia', 'Noto Serif SC', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.home__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+}
+
+.home__subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--color-muted);
+}
+
+.home__status {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  opacity: 0.8;
+}

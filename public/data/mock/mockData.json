@@ -1,0 +1,10 @@
+{
+  "mockRefuges": [
+    { "id": "r1", "name": "State Library Reading Room", "type": "library", "lat": -37.8096, "lng": 144.9653, "quietLevel": 9 },
+    { "id": "r2", "name": "Flagstaff Gardens Lawn", "type": "park", "lat": -37.8112, "lng": 144.9558, "quietLevel": 7 }
+  ],
+  "mockCrowd": [
+    { "sensorId": "S-001", "location": "Flinders St Station Entrance", "count": 320, "level": "high" },
+    { "sensorId": "S-002", "location": "State Library Forecourt", "count": 45, "level": "low" }
+  ]
+}

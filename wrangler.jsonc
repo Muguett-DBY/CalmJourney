@@ -1,0 +1,12 @@
+// Cloudflare Pages project config
+// Deploy: GitHub Actions auto-deploys on push to main (see .github/workflows/deploy.yml)
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "calmjourney",
+  "pages_build_output_dir": "dist",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  }
+}
