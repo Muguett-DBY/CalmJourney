@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 
 const items = [
   { label: 'Home', path: '/' },
+  { label: 'Live Map', path: '/dashboard' },
   { label: 'Refuges', path: '/refuges' },
   { label: 'Forecast', path: '/forecast' },
   { label: 'Alerts', path: '/alerts' },

@@ -19,7 +19,7 @@ export default function DashboardPage() {
 
   return (
     <div className="page-shell">
-      <InnerHeader active="Home" />
+      <InnerHeader active="Live Map" />
       <main className="dashboard-main">
         <section className="page-title-row">
           <div><h1>Good afternoon, Emily</h1><p>Your current sensory environment around your saved journey.</p></div>

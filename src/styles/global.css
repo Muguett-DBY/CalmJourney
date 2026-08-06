@@ -43,6 +43,9 @@ select {
 }
 
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   min-height: 78px;
   padding: 0 40px;
   display: grid;
