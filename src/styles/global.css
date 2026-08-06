@@ -20,6 +20,7 @@
 
 html {
   min-width: 320px;
+  scrollbar-gutter: stable;
   background: var(--color-background);
 }
 
@@ -1329,9 +1330,6 @@ select {
     white-space: nowrap;
   }
 
-  .refuge-header .site-nav {
-    transform: translateX(-100px);
-  }
 }
 
 @media (max-width: 920px) {
