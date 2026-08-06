@@ -1,4 +1,11 @@
-const navigationItems = ['Home', 'Refuges', 'Forecast', 'Alerts']
+import { useNavigate } from 'react-router-dom'
+
+const navigationItems = [
+  { label: 'Home', path: '/' },
+  { label: 'Refuges', path: '/refuges' },
+  { label: 'Forecast' },
+  { label: 'Alerts' },
+]
 
 const filters = ['All', 'Parks', 'Libraries', 'Quiet public spaces']
 
@@ -130,6 +137,8 @@ function RefugeMapIllustration() {
 }
 
 export default function RefugePage() {
+  const navigate = useNavigate()
+
   return (
     <div className="page-shell refuge-page">
       <header className="site-header refuge-header">
@@ -141,12 +150,13 @@ export default function RefugePage() {
         <nav className="site-nav" aria-label="Primary navigation">
           {navigationItems.map((item) => (
             <button
-              className={`site-nav__item${item === 'Refuges' ? ' site-nav__item--active' : ''}`}
+              className={`site-nav__item${item.label === 'Refuges' ? ' site-nav__item--active' : ''}`}
               type="button"
-              aria-current={item === 'Refuges' ? 'page' : undefined}
-              key={item}
+              aria-current={item.label === 'Refuges' ? 'page' : undefined}
+              onClick={item.path ? () => navigate(item.path) : undefined}
+              key={item.label}
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </nav>

@@ -1,4 +1,12 @@
-const navigationItems = ['Home', 'Live Map', 'Refuges', 'Forecast', 'Alerts']
+import { useNavigate } from 'react-router-dom'
+
+const navigationItems = [
+  { label: 'Home', path: '/' },
+  { label: 'Live Map' },
+  { label: 'Refuges', path: '/refuges' },
+  { label: 'Forecast' },
+  { label: 'Alerts' },
+]
 
 const featureCards = [
   {
@@ -10,6 +18,7 @@ const featureCards = [
     label: 'Refuges',
     title: 'Nearby sensory refuges',
     description: 'Find parks, libraries and quiet public spaces on demand.',
+    path: '/refuges',
   },
   {
     label: 'Forecast',
@@ -88,6 +97,8 @@ function SensoryMap() {
 }
 
 export default function HomePage() {
+  const navigate = useNavigate()
+
   return (
     <div className="page-shell">
       <header className="site-header">
@@ -102,9 +113,10 @@ export default function HomePage() {
               className={`site-nav__item${index === 0 ? ' site-nav__item--active' : ''}`}
               type="button"
               aria-current={index === 0 ? 'page' : undefined}
-              key={item}
+              onClick={item.path ? () => navigate(item.path) : undefined}
+              key={item.label}
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </nav>
@@ -127,7 +139,13 @@ export default function HomePage() {
             </p>
             <div className="hero-actions" aria-label="Homepage actions">
               <button className="button button--primary" type="button">Open live map</button>
-              <button className="button button--secondary" type="button">Find a quiet space</button>
+              <button
+                className="button button--secondary"
+                type="button"
+                onClick={() => navigate('/refuges')}
+              >
+                Find a quiet space
+              </button>
             </div>
           </div>
 
@@ -146,7 +164,11 @@ export default function HomePage() {
               <span className="feature-card__label">{card.label}</span>
               <h2>{card.title}</h2>
               <p>{card.description}</p>
-              <button className="feature-card__link" type="button">
+              <button
+                className="feature-card__link"
+                type="button"
+                onClick={card.path ? () => navigate(card.path) : undefined}
+              >
                 Explore <span aria-hidden="true">→</span>
               </button>
             </article>
