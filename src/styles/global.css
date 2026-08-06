@@ -86,12 +86,19 @@ select {
   position: relative;
   display: flex;
   align-items: center;
+  padding: 0;
+  border: 0;
   color: var(--color-muted);
+  background: transparent;
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
+  cursor: pointer;
+  transition: color 160ms ease;
 }
 
+.site-nav__item:hover,
+.site-nav__item:focus-visible,
 .site-nav__item--active {
   color: var(--color-accent);
 }
@@ -111,7 +118,12 @@ select {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .profile__avatar {
@@ -124,6 +136,12 @@ select {
   background: #dcebe5;
   font-size: 14px;
   font-weight: 700;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.profile:hover .profile__avatar {
+  background: #cce3da;
+  transform: translateY(-1px);
 }
 
 .profile__name {
@@ -199,7 +217,10 @@ select {
   color: var(--color-accent-dark);
   font-size: 14px;
   font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
   user-select: none;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .button--primary {
@@ -209,6 +230,23 @@ select {
 
 .button--secondary {
   background: var(--color-surface);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button--primary:hover {
+  border-color: var(--color-accent-dark);
+  background: var(--color-accent-dark);
+}
+
+.button--secondary:hover {
+  background: #edf5f1;
+}
+
+.button:active {
+  transform: translateY(0);
 }
 
 .overview-card {
@@ -306,9 +344,14 @@ select {
 
 .feature-card__link {
   margin-top: auto;
+  padding: 0;
+  border: 0;
   color: var(--color-accent-dark);
+  background: transparent;
   font-size: 14px;
   font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .feature-card__link span {
@@ -316,6 +359,20 @@ select {
   margin-left: 2px;
   font-size: 18px;
   line-height: 0;
+  transition: transform 160ms ease;
+}
+
+.feature-card__link:hover span {
+  transform: translateX(3px);
+}
+
+.site-nav__item:focus-visible,
+.profile:focus-visible,
+.button:focus-visible,
+.feature-card__link:focus-visible {
+  outline: 3px solid #a9d2c5;
+  outline-offset: 4px;
+  border-radius: 6px;
 }
 
 .site-footer {

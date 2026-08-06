@@ -98,16 +98,21 @@ export default function HomePage() {
 
         <nav className="site-nav" aria-label="Primary navigation">
           {navigationItems.map((item, index) => (
-            <span className={`site-nav__item${index === 0 ? ' site-nav__item--active' : ''}`} key={item}>
+            <button
+              className={`site-nav__item${index === 0 ? ' site-nav__item--active' : ''}`}
+              type="button"
+              aria-current={index === 0 ? 'page' : undefined}
+              key={item}
+            >
               {item}
-            </span>
+            </button>
           ))}
         </nav>
 
-        <div className="profile" aria-label="Signed in as Freddy">
+        <button className="profile" type="button" aria-label="Signed in as Freddy">
           <span className="profile__avatar" aria-hidden="true">F</span>
           <span className="profile__name">Freddy</span>
-        </div>
+        </button>
       </header>
 
       <main>
@@ -121,8 +126,8 @@ export default function HomePage() {
               before environments become overwhelming.
             </p>
             <div className="hero-actions" aria-label="Homepage actions">
-              <span className="button button--primary">Open live map</span>
-              <span className="button button--secondary">Find a quiet space</span>
+              <button className="button button--primary" type="button">Open live map</button>
+              <button className="button button--secondary" type="button">Find a quiet space</button>
             </div>
           </div>
 
@@ -141,7 +146,9 @@ export default function HomePage() {
               <span className="feature-card__label">{card.label}</span>
               <h2>{card.title}</h2>
               <p>{card.description}</p>
-              <span className="feature-card__link">Explore <span aria-hidden="true">→</span></span>
+              <button className="feature-card__link" type="button">
+                Explore <span aria-hidden="true">→</span>
+              </button>
             </article>
           ))}
         </section>
