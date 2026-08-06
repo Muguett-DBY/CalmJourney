@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router-dom'
 
 const navigationItems = [
   { label: 'Home', path: '/' },
-  { label: 'Live Map' },
+  { label: 'Live Map', path: '/dashboard' },
   { label: 'Refuges', path: '/refuges' },
-  { label: 'Forecast' },
-  { label: 'Alerts' },
+  { label: 'Forecast', path: '/forecast' },
+  { label: 'Alerts', path: '/alerts' },
 ]
 
 const featureCards = [
@@ -13,6 +13,7 @@ const featureCards = [
     label: 'Alerts',
     title: 'Real-time sensory alerts',
     description: 'Know when crowd, noise or activity levels become stressful.',
+    path: '/alerts',
   },
   {
     label: 'Refuges',
@@ -24,6 +25,7 @@ const featureCards = [
     label: 'Forecast',
     title: 'One-hour sensory forecast',
     description: 'See which areas may become overwhelming before you arrive.',
+    path: '/forecast',
   },
 ]
 
@@ -138,7 +140,13 @@ export default function HomePage() {
               before environments become overwhelming.
             </p>
             <div className="hero-actions" aria-label="Homepage actions">
-              <button className="button button--primary" type="button">Open live map</button>
+              <button
+                className="button button--primary"
+                type="button"
+                onClick={() => navigate('/dashboard')}
+              >
+                Open live map
+              </button>
               <button
                 className="button button--secondary"
                 type="button"

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 const navigationItems = [
   { label: 'Home', path: '/' },
   { label: 'Refuges', path: '/refuges' },
-  { label: 'Forecast' },
-  { label: 'Alerts' },
+  { label: 'Forecast', path: '/forecast' },
+  { label: 'Alerts', path: '/alerts' },
 ]
 
 const filters = ['All', 'Parks', 'Libraries', 'Quiet public spaces']
@@ -209,7 +209,12 @@ export default function RefugePage() {
 
             <div className="quiet-spaces-list">
               {quietSpaces.map((space) => (
-                <button className="quiet-space-card" type="button" key={space.name}>
+                <button
+                  className="quiet-space-card"
+                  type="button"
+                  onClick={() => navigate('/refuges/state-library-victoria')}
+                  key={space.name}
+                >
                   <strong>{space.name}</strong>
                   <span className="quiet-space-card__meta">{space.meta}</span>
                   <span className="quiet-space-card__footer">
@@ -220,7 +225,11 @@ export default function RefugePage() {
               ))}
             </div>
 
-            <button className="button button--primary navigate-button" type="button">
+            <button
+              className="button button--primary navigate-button"
+              type="button"
+              onClick={() => navigate('/refuges/state-library-victoria')}
+            >
               Navigate to selected refuge
             </button>
           </aside>
