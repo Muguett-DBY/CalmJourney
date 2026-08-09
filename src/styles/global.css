@@ -47,10 +47,10 @@ select {
   position: sticky;
   top: 0;
   z-index: 20;
-  min-height: 78px;
-  padding: 0 40px;
+  min-height: 96px;
+  padding: 0 54px;
   display: grid;
-  grid-template-columns: minmax(460px, 1fr) auto auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 48px;
   background: var(--color-surface);
@@ -90,7 +90,7 @@ select {
 }
 
 .site-nav {
-  height: 78px;
+  height: 96px;
   display: flex;
   align-items: stretch;
   gap: 34px;
@@ -121,7 +121,7 @@ select {
   content: '';
   position: absolute;
   right: 0;
-  bottom: 10px;
+  bottom: 13px;
   left: 0;
   height: 3px;
   border-radius: 999px;
@@ -1272,6 +1272,136 @@ select {
   min-width: 230px;
 }
 
+.landing-main {
+  min-height: 785px;
+}
+
+.landing-hero {
+  min-height: 570px;
+  background-image: linear-gradient(rgba(247, 244, 237, 0.12), rgba(247, 244, 237, 0.42)), url('../assets/melbourne-skyline.png');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% auto;
+}
+
+.landing-copy {
+  width: calc(100% - 60px);
+  max-width: 1628px;
+  margin: 0 auto;
+  padding-top: 132px;
+}
+
+.landing-copy h1 {
+  max-width: 1050px;
+  margin: 0;
+  color: var(--color-accent);
+  font-size: clamp(54px, 4.55vw, 82px);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.landing-copy p {
+  margin: 9px 0 0;
+  color: var(--color-muted);
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.landing-actions {
+  margin-top: 55px;
+  display: flex;
+  gap: 50px;
+}
+
+.landing-actions .button {
+  min-width: 290px;
+  min-height: 75px;
+  border-radius: 20px;
+  font-size: 18px;
+}
+
+.landing-actions .button--secondary {
+  min-width: 248px;
+}
+
+.landing-features {
+  width: calc(100% - 60px);
+  max-width: 1618px;
+  margin: 18px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+
+.landing-feature-card {
+  min-height: 278px;
+  padding: 29px 28px 27px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: rgba(255, 253, 248, 0.94);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+}
+
+.landing-feature-icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--color-accent);
+  background: #eef6f3;
+}
+
+.landing-feature-icon svg {
+  width: 31px;
+  height: 31px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.landing-feature-card h2 {
+  margin: 8px 0 0;
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.landing-feature-card p {
+  max-width: 390px;
+  margin: 13px 0 0;
+  color: var(--color-muted);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.landing-feature-card button {
+  margin-top: auto;
+  padding: 0;
+  border: 0;
+  color: var(--color-accent-dark);
+  background: transparent;
+  font-size: 42px;
+  font-weight: 300;
+  line-height: 0.7;
+  cursor: pointer;
+}
+
+.landing-feature-card button:hover {
+  transform: translateX(4px);
+}
+
+.landing-footer {
+  padding: 68px 24px 72px;
+  color: var(--color-muted);
+  background: var(--color-background);
+  font-size: 15px;
+  text-align: center;
+}
+
 @media (max-width: 1200px) {
   .site-header {
     grid-template-columns: 1fr auto;
@@ -1323,6 +1453,27 @@ select {
   .refuge-layout {
     grid-template-columns: minmax(0, 1fr) 320px;
   }
+
+  .landing-hero {
+    min-height: 540px;
+  }
+
+  .landing-copy {
+    padding-top: 110px;
+  }
+
+  .landing-actions {
+    margin-top: 40px;
+    gap: 24px;
+  }
+
+  .landing-actions .button {
+    min-width: 245px;
+  }
+
+  .landing-features {
+    gap: 22px;
+  }
 }
 
 @media (min-width: 1201px) {
@@ -1335,6 +1486,36 @@ select {
 @media (max-width: 920px) {
   .hero {
     grid-template-columns: 1fr;
+  }
+
+  .landing-hero {
+    background-size: auto 610px;
+    background-position: 43% top;
+  }
+
+  .landing-hero {
+    min-height: 545px;
+  }
+
+  .landing-copy {
+    width: calc(100% - 56px);
+    padding-top: 82px;
+  }
+
+  .landing-copy h1 {
+    font-size: clamp(46px, 8vw, 64px);
+  }
+
+  .landing-copy p br {
+    display: none;
+  }
+
+  .landing-features {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-feature-card {
+    min-height: 230px;
   }
 
   .hero-copy {
@@ -1405,6 +1586,76 @@ select {
   .site-header {
     min-height: 70px;
     padding: 0 18px;
+  }
+
+  .landing-main {
+    min-height: 0;
+  }
+
+  .landing-hero {
+    background-image: linear-gradient(rgba(247, 244, 237, 0.5), rgba(247, 244, 237, 0.86)), url('../assets/melbourne-skyline.png');
+    background-size: auto 520px;
+    background-position: 44% top;
+    min-height: 520px;
+  }
+
+  .landing-copy {
+    width: calc(100% - 36px);
+    padding-top: 62px;
+  }
+
+  .landing-copy h1 {
+    font-size: clamp(40px, 12vw, 52px);
+    line-height: 1.08;
+  }
+
+  .landing-copy h1 br {
+    display: none;
+  }
+
+  .landing-copy p {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .landing-actions {
+    margin-top: 30px;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .landing-actions .button,
+  .landing-actions .button--secondary {
+    min-width: 0;
+    min-height: 58px;
+    font-size: 15px;
+  }
+
+  .landing-features {
+    width: auto;
+    margin-top: 24px;
+    padding: 0 18px;
+    gap: 16px;
+  }
+
+  .landing-feature-card {
+    min-height: 220px;
+    padding: 24px;
+  }
+
+  .landing-feature-card h2 {
+    font-size: 22px;
+  }
+
+  .landing-feature-card p {
+    font-size: 15px;
+  }
+
+  .landing-footer {
+    padding: 36px 18px 42px;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   .header-brand__name {

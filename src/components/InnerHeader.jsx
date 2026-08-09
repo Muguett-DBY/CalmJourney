@@ -15,7 +15,6 @@ export default function InnerHeader({ active }) {
     <header className="site-header inner-header">
       <button className="header-brand header-brand--button" type="button" onClick={() => navigate('/')}>
         <span className="header-brand__name">CalmJourney</span>
-        <span className="header-brand__tagline">Sensory-friendly urban travel companion</span>
       </button>
 
       <nav className="site-nav" aria-label="Primary navigation">
@@ -31,11 +30,6 @@ export default function InnerHeader({ active }) {
           </button>
         ))}
       </nav>
-
-      <button className="profile" type="button" aria-label="Signed in as Freddy">
-        <span className="profile__avatar" aria-hidden="true">F</span>
-        <span className="profile__name">Freddy</span>
-      </button>
     </header>
   )
 }

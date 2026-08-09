@@ -1,12 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-
-const navigationItems = [
-  { label: 'Home', path: '/' },
-  { label: 'Live Map', path: '/dashboard' },
-  { label: 'Refuges', path: '/refuges' },
-  { label: 'Forecast', path: '/forecast' },
-  { label: 'Alerts', path: '/alerts' },
-]
+import InnerHeader from '../components/InnerHeader.jsx'
 
 const filters = ['All', 'Parks', 'Libraries', 'Quiet public spaces']
 
@@ -142,31 +135,7 @@ export default function RefugePage() {
 
   return (
     <div className="page-shell refuge-page">
-      <header className="site-header refuge-header">
-        <div className="header-brand">
-          <span className="header-brand__name">CalmJourney</span>
-          <span className="header-brand__tagline">Sensory-friendly urban travel companion</span>
-        </div>
-
-        <nav className="site-nav" aria-label="Primary navigation">
-          {navigationItems.map((item) => (
-            <button
-              className={`site-nav__item${item.label === 'Refuges' ? ' site-nav__item--active' : ''}`}
-              type="button"
-              aria-current={item.label === 'Refuges' ? 'page' : undefined}
-              onClick={item.path ? () => navigate(item.path) : undefined}
-              key={item.label}
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
-
-        <button className="profile" type="button" aria-label="Signed in as Freddy">
-          <span className="profile__avatar" aria-hidden="true">F</span>
-          <span className="profile__name">Freddy</span>
-        </button>
-      </header>
+      <InnerHeader active="Refuges" />
 
       <main className="refuge-main">
         <section className="refuge-intro" aria-labelledby="refuge-heading">
