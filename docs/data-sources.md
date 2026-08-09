@@ -1,9 +1,9 @@
 # Data sources
 
-> Planned, not yet wired up.
-
 ## City of Melbourne open data
 
+- Landmarks and places of interest: parks, libraries and public spaces used by US2.1
+  - <https://data.melbourne.vic.gov.au/explore/dataset/landmarks-and-places-of-interest-including-schools-theatres-health-services-spor/>
 - Pedestrian Counting System: real-time / historical pedestrian counts for Melbourne CBD
   - <https://data.melbourne.vic.gov.au>
 
@@ -17,4 +17,6 @@
 
 ## Database
 
-- Supabase Postgres: refuges, route scores, crowd observation cache
+- Supabase PostgreSQL stores data sources and refuge locations as related tables.
+- `nearby_refuges` calculates straight-line distance from the user's location.
+- Public access is read-only through Row Level Security policies.

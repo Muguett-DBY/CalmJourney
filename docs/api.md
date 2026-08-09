@@ -1,6 +1,6 @@
 # API
 
-> Scaffold: all endpoints currently return placeholder responses. Will be updated as implemented.
+> Routes not marked as implemented still return scaffold responses.
 
 ## Routes
 
@@ -21,7 +21,7 @@
 
 | Method | Path | Description |
 |---|---|---|
-| GET | `/api/refuges/nearby` | nearby quiet refuges |
+| GET | `/api/refuges/nearby` | implemented: nearby refuge locations filtered by type and walking distance |
 
 ## Alerts
 

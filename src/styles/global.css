@@ -429,6 +429,13 @@ select {
   font-size: 15px;
 }
 
+.location-message {
+  display: block;
+  margin-top: 8px;
+  color: var(--color-accent-dark);
+  font-size: 12px;
+}
+
 .location-button {
   min-width: 186px;
   margin-top: 9px;
@@ -507,10 +514,48 @@ select {
   border-radius: 18px;
 }
 
-.refuge-map {
+.refuge-map,
+.refuge-map-canvas {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.refuge-map-canvas {
+  z-index: 0;
+  background: #f0ede5;
+}
+
+.refuge-map-canvas .leaflet-control-attribution {
+  color: var(--color-muted);
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.refuge-marker-shell {
+  border: 0;
+  background: transparent;
+}
+
+.refuge-marker {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--color-accent);
+  box-shadow: 0 3px 12px rgb(39 74 64 / 25%);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.refuge-marker--selected {
+  background: var(--color-accent-dark);
+  box-shadow: 0 0 0 5px rgb(76 146 125 / 24%), 0 3px 12px rgb(39 74 64 / 28%);
+  transform: scale(1.08);
 }
 
 .quiet-spaces-panel {
@@ -518,6 +563,7 @@ select {
   padding: 19px 21px 10px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 18px;
@@ -537,8 +583,12 @@ select {
 
 .quiet-spaces-list {
   margin-top: 14px;
+  flex: 1;
   display: grid;
   gap: 13px;
+  min-height: 0;
+  padding-right: 4px;
+  overflow-y: auto;
 }
 
 .quiet-space-card {
@@ -563,6 +613,12 @@ select {
   transform: translateY(-1px);
 }
 
+.quiet-space-card--selected {
+  border-color: var(--color-accent);
+  background: #eaf2ee;
+  box-shadow: 0 0 0 2px rgb(76 146 125 / 10%);
+}
+
 .quiet-space-card strong {
   font-size: 15px;
   line-height: 1.2;
@@ -582,11 +638,11 @@ select {
   gap: 12px;
   color: var(--color-muted);
   font-size: 11px;
-  white-space: nowrap;
+  text-align: right;
 }
 
-.comfort-pill {
-  min-width: 126px;
+.refuge-type-pill {
+  min-width: 88px;
   min-height: 31px;
   padding: 0 12px;
   display: inline-flex;
@@ -597,6 +653,19 @@ select {
   background: #dcebe5;
   font-weight: 700;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.refuge-status {
+  margin: 0;
+  padding: 28px 12px;
+  color: var(--color-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.refuge-status--error {
+  color: #b74f49;
 }
 
 .navigate-button {
@@ -604,6 +673,12 @@ select {
   min-width: 0;
   margin-top: auto;
   border-radius: 13px;
+  text-align: center;
+}
+
+.navigate-button--disabled {
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .filter-pill:focus-visible,

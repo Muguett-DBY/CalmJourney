@@ -28,11 +28,11 @@ Cloudflare Pages Functions (functions/api/*)   ← serverless API
 | Service | `src/services/*` | frontend API call wrappers |
 | API | `functions/api/*` | route entry, auth / validation / response format |
 | Logic | `server/*` | pure business logic (unit-testable) |
-| Data | `supabase/` | schema, migrations, seed |
+| Data | `supabase/` | PostgreSQL migrations, relational refuge schema and seed data |
 
 ## Core modules
 
 - **sensory scoring**: score route segments (noise, crowd, greenery, refuge density → 0-100 pressure)
 - **crowd intelligence**: real-time crowd + historical patterns → congestion level and prediction
-- **refuges**: quiet refuge lookup (libraries / parks / community spaces)
+- **refuges**: Supabase PostgreSQL RPC lookup for nearby libraries, parks and quiet public spaces
 - **alerts**: pre-trip and mid-trip stress warnings
