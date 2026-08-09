@@ -4,7 +4,9 @@ import RefugeMap from '../components/RefugeMap.jsx'
 import { getNearbyRefuges } from '../services/refugeService.js'
 import {
   estimateWalkingMinutes,
+  formatCoordinates,
   formatDistance,
+  formatRefugeLocation,
   formatRefugeType,
   nextWalkingMinutes,
 } from '../utils/refuges.js'
@@ -29,6 +31,7 @@ export default function RefugePage() {
   const [walkingMinutes, setWalkingMinutes] = useState(10)
   const [refuges, setRefuges] = useState([])
   const [selectedId, setSelectedId] = useState(null)
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
   const [locating, setLocating] = useState(false)
@@ -37,6 +40,8 @@ export default function RefugePage() {
     const controller = new AbortController()
     setStatus('loading')
     setError('')
+    setSelectedId(null)
+    setDetailsOpen(false)
 
     getNearbyRefuges({
       latitude: location.latitude,
@@ -47,7 +52,6 @@ export default function RefugePage() {
     })
       .then((data) => {
         setRefuges(data)
-        setSelectedId(data[0]?.id ?? null)
         setStatus('ready')
       })
       .catch((requestError) => {
@@ -64,7 +68,10 @@ export default function RefugePage() {
     [refuges, selectedId],
   )
 
-  const selectRefuge = useCallback((id) => setSelectedId(id), [])
+  const openRefugeDetails = useCallback((id) => {
+    setSelectedId(id)
+    setDetailsOpen(true)
+  }, [])
 
   function useCurrentLocation() {
     setLocating(true)
@@ -144,55 +151,113 @@ export default function RefugePage() {
                 location={location}
                 refuges={refuges}
                 selectedId={selectedId}
-                onSelect={selectRefuge}
+                onSelect={openRefugeDetails}
               />
             </figure>
           </div>
 
-          <aside className="quiet-spaces-panel" aria-labelledby="quiet-spaces-heading">
-            <div className="quiet-spaces-panel__heading">
-              <h2 id="quiet-spaces-heading">Nearby refuge locations</h2>
-              <p>Sorted by distance from {locationLabel}</p>
-            </div>
-
-            <div className="quiet-spaces-list" aria-live="polite">
-              {status === 'loading' ? <p className="refuge-status">Finding nearby places...</p> : null}
-              {status === 'error' ? <p className="refuge-status refuge-status--error">{error}</p> : null}
-              {status === 'ready' && refuges.length === 0 ? (
-                <p className="refuge-status">No matching places were found within {walkingMinutes} minutes.</p>
-              ) : null}
-              {status === 'ready' ? refuges.map((refuge) => (
+          <aside className="quiet-spaces-panel">
+            {detailsOpen && selectedRefuge ? (
+              <div className="refuge-details" aria-labelledby="refuge-details-heading">
                 <button
-                  className={`quiet-space-card${selectedId === refuge.id ? ' quiet-space-card--selected' : ''}`}
+                  className="refuge-details__back"
                   type="button"
-                  onClick={() => selectRefuge(refuge.id)}
-                  aria-pressed={selectedId === refuge.id}
-                  key={refuge.id}
+                  onClick={() => setDetailsOpen(false)}
                 >
-                  <strong>{refuge.name}</strong>
-                  <span className="quiet-space-card__meta">
-                    {formatRefugeType(refuge.refuge_type)} · {estimateWalkingMinutes(refuge.distance_m)} min · {formatDistance(refuge.distance_m)}
-                  </span>
-                  <span className="quiet-space-card__footer">
-                    <span className="refuge-type-pill">Open data</span>
-                    <span>{refuge.description}</span>
-                  </span>
+                  &larr; Back to nearby places
                 </button>
-              )) : null}
-            </div>
 
-            <a
-              className={`button button--primary navigate-button${selectedRefuge ? '' : ' navigate-button--disabled'}`}
-              href={directionsUrl}
-              target={selectedRefuge ? '_blank' : undefined}
-              rel={selectedRefuge ? 'noreferrer' : undefined}
-              aria-disabled={!selectedRefuge}
-              onClick={(event) => {
-                if (!selectedRefuge) event.preventDefault()
-              }}
-            >
-              {selectedRefuge ? `Directions to ${selectedRefuge.name}` : 'Select a refuge for directions'}
-            </a>
+                <div className="refuge-details__heading">
+                  <span className="refuge-type-pill">{formatRefugeType(selectedRefuge.refuge_type)}</span>
+                  <h2 id="refuge-details-heading">{selectedRefuge.name}</h2>
+                  <p>{selectedRefuge.description}</p>
+                </div>
+
+                <dl className="refuge-details__list">
+                  <div>
+                    <dt>Walking distance</dt>
+                    <dd>
+                      {estimateWalkingMinutes(selectedRefuge.distance_m)} min · {formatDistance(selectedRefuge.distance_m)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Location</dt>
+                    <dd>{formatRefugeLocation(selectedRefuge)}</dd>
+                  </div>
+                  <div>
+                    <dt>Coordinates</dt>
+                    <dd>{formatCoordinates(selectedRefuge.latitude, selectedRefuge.longitude)}</dd>
+                  </div>
+                  <div>
+                    <dt>Opening hours</dt>
+                    <dd className="refuge-details__hours">
+                      {selectedRefuge.opening_hours_text || 'Opening hours not available from the source.'}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Data source</dt>
+                    <dd>{selectedRefuge.source_name}</dd>
+                  </div>
+                </dl>
+
+                <p className="refuge-details__note">
+                  Opening hours may change on public holidays. Check official information before visiting.
+                </p>
+
+                <div className="refuge-details__links">
+                  {selectedRefuge.website_url ? (
+                    <a href={selectedRefuge.website_url} target="_blank" rel="noreferrer">
+                      Official information
+                    </a>
+                  ) : null}
+                  <a href={selectedRefuge.source_url} target="_blank" rel="noreferrer">
+                    View data source
+                  </a>
+                </div>
+
+                <a
+                  className="button button--primary navigate-button"
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Get walking directions
+                </a>
+              </div>
+            ) : (
+              <>
+                <div className="quiet-spaces-panel__heading">
+                  <h2 id="quiet-spaces-heading">Nearby refuge locations</h2>
+                  <p>Sorted by distance from {locationLabel}</p>
+                </div>
+
+                <div className="quiet-spaces-list" aria-live="polite">
+                  {status === 'loading' ? <p className="refuge-status">Finding nearby places...</p> : null}
+                  {status === 'error' ? <p className="refuge-status refuge-status--error">{error}</p> : null}
+                  {status === 'ready' && refuges.length === 0 ? (
+                    <p className="refuge-status">No matching places were found within {walkingMinutes} minutes.</p>
+                  ) : null}
+                  {status === 'ready' ? refuges.map((refuge) => (
+                    <button
+                      className={`quiet-space-card${selectedId === refuge.id ? ' quiet-space-card--selected' : ''}`}
+                      type="button"
+                      onClick={() => openRefugeDetails(refuge.id)}
+                      aria-label={`View details for ${refuge.name}`}
+                      key={refuge.id}
+                    >
+                      <strong>{refuge.name}</strong>
+                      <span className="quiet-space-card__meta">
+                        {formatRefugeType(refuge.refuge_type)} · {estimateWalkingMinutes(refuge.distance_m)} min · {formatDistance(refuge.distance_m)}
+                      </span>
+                      <span className="quiet-space-card__footer">
+                        <span className="refuge-type-pill">View details</span>
+                        <span>{refuge.suburb}</span>
+                      </span>
+                    </button>
+                  )) : null}
+                </div>
+              </>
+            )}
           </aside>
         </div>
       </main>

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
   estimateWalkingMinutes,
+  formatCoordinates,
   formatDistance,
+  formatRefugeLocation,
   formatRefugeType,
   nextWalkingMinutes,
 } from '../../src/utils/refuges.js'
@@ -23,5 +25,14 @@ describe('refuge display helpers', () => {
     expect(formatRefugeType('park')).toBe('Park')
     expect(formatRefugeType('library')).toBe('Library')
     expect(formatRefugeType('quiet_public_space')).toBe('Quiet public space')
+  })
+
+  it('formats basic refuge location details', () => {
+    expect(formatRefugeLocation({
+      address: '253 Flinders Lane, Melbourne VIC 3000',
+      suburb: 'Melbourne',
+    })).toBe('253 Flinders Lane, Melbourne VIC 3000')
+    expect(formatRefugeLocation({ address: null, suburb: 'Carlton' })).toBe('Carlton, Victoria')
+    expect(formatCoordinates(-37.81691, 144.96584)).toBe('-37.81691, 144.96584')
   })
 })

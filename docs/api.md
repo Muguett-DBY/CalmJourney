@@ -21,7 +21,9 @@
 
 | Method | Path | Description |
 |---|---|---|
-| GET | `/api/refuges/nearby` | implemented: nearby refuge locations filtered by type and walking distance |
+| GET | `/api/refuges/nearby` | implemented: nearby refuge locations and details filtered by type and walking distance |
+
+Refuge results include name, type, description, coordinates, suburb, optional address and opening hours, official website, data source and estimated distance.
 
 ## Alerts
 

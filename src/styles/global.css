@@ -668,6 +668,97 @@ select {
   color: #b74f49;
 }
 
+.refuge-details {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.refuge-details__back {
+  align-self: flex-start;
+  padding: 2px 0;
+  border: 0;
+  color: var(--color-accent-dark);
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.refuge-details__heading {
+  margin-top: 21px;
+}
+
+.refuge-details__heading h2 {
+  margin: 14px 0 0;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.refuge-details__heading p {
+  margin-top: 10px;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.refuge-details__list {
+  margin: 20px 0 0;
+}
+
+.refuge-details__list div {
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.refuge-details__list dt {
+  color: var(--color-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.refuge-details__list dd {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.refuge-details__hours {
+  white-space: pre-line;
+}
+
+.refuge-details__note {
+  margin: 10px 0 0;
+  color: var(--color-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.refuge-details__links {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.refuge-details__links a {
+  color: var(--color-accent-dark);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.refuge-details__links a:hover {
+  text-decoration: underline;
+}
+
 .navigate-button {
   width: 100%;
   min-width: 0;
@@ -676,13 +767,15 @@ select {
   text-align: center;
 }
 
-.navigate-button--disabled {
-  opacity: 0.55;
-  pointer-events: none;
+.refuge-details .navigate-button {
+  flex: 0 0 auto;
+  margin-top: 18px;
 }
 
 .filter-pill:focus-visible,
 .quiet-space-card:focus-visible,
+.refuge-details__back:focus-visible,
+.refuge-details__links a:focus-visible,
 .header-brand--button:focus-visible,
 .text-action:focus-visible,
 .summary-list button:focus-visible,

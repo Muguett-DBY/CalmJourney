@@ -18,3 +18,12 @@ export function formatRefugeType(type) {
   if (type === 'quiet_public_space') return 'Quiet public space'
   return type.charAt(0).toUpperCase() + type.slice(1)
 }
+
+export function formatRefugeLocation(refuge) {
+  if (refuge.address) return refuge.address
+  return `${refuge.suburb}, Victoria`
+}
+
+export function formatCoordinates(latitude, longitude) {
+  return `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`
+}
