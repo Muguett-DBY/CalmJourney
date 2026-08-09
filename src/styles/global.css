@@ -429,6 +429,13 @@ select {
   font-size: 15px;
 }
 
+.location-message {
+  display: block;
+  margin-top: 8px;
+  color: var(--color-accent-dark);
+  font-size: 12px;
+}
+
 .location-button {
   min-width: 186px;
   margin-top: 9px;
@@ -507,10 +514,48 @@ select {
   border-radius: 18px;
 }
 
-.refuge-map {
+.refuge-map,
+.refuge-map-canvas {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.refuge-map-canvas {
+  z-index: 0;
+  background: #f0ede5;
+}
+
+.refuge-map-canvas .leaflet-control-attribution {
+  color: var(--color-muted);
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.refuge-marker-shell {
+  border: 0;
+  background: transparent;
+}
+
+.refuge-marker {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--color-accent);
+  box-shadow: 0 3px 12px rgb(39 74 64 / 25%);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.refuge-marker--selected {
+  background: var(--color-accent-dark);
+  box-shadow: 0 0 0 5px rgb(76 146 125 / 24%), 0 3px 12px rgb(39 74 64 / 28%);
+  transform: scale(1.08);
 }
 
 .quiet-spaces-panel {
@@ -518,6 +563,7 @@ select {
   padding: 19px 21px 10px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 18px;
@@ -537,8 +583,12 @@ select {
 
 .quiet-spaces-list {
   margin-top: 14px;
+  flex: 1;
   display: grid;
   gap: 13px;
+  min-height: 0;
+  padding-right: 4px;
+  overflow-y: auto;
 }
 
 .quiet-space-card {
@@ -563,6 +613,12 @@ select {
   transform: translateY(-1px);
 }
 
+.quiet-space-card--selected {
+  border-color: var(--color-accent);
+  background: #eaf2ee;
+  box-shadow: 0 0 0 2px rgb(76 146 125 / 10%);
+}
+
 .quiet-space-card strong {
   font-size: 15px;
   line-height: 1.2;
@@ -582,11 +638,11 @@ select {
   gap: 12px;
   color: var(--color-muted);
   font-size: 11px;
-  white-space: nowrap;
+  text-align: right;
 }
 
-.comfort-pill {
-  min-width: 126px;
+.refuge-type-pill {
+  min-width: 88px;
   min-height: 31px;
   padding: 0 12px;
   display: inline-flex;
@@ -597,6 +653,110 @@ select {
   background: #dcebe5;
   font-weight: 700;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.refuge-status {
+  margin: 0;
+  padding: 28px 12px;
+  color: var(--color-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.refuge-status--error {
+  color: #b74f49;
+}
+
+.refuge-details {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.refuge-details__back {
+  align-self: flex-start;
+  padding: 2px 0;
+  border: 0;
+  color: var(--color-accent-dark);
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.refuge-details__heading {
+  margin-top: 21px;
+}
+
+.refuge-details__heading h2 {
+  margin: 14px 0 0;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.refuge-details__heading p {
+  margin-top: 10px;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.refuge-details__list {
+  margin: 20px 0 0;
+}
+
+.refuge-details__list div {
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.refuge-details__list dt {
+  color: var(--color-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.refuge-details__list dd {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.refuge-details__hours {
+  white-space: pre-line;
+}
+
+.refuge-details__note {
+  margin: 10px 0 0;
+  color: var(--color-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.refuge-details__links {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.refuge-details__links a {
+  color: var(--color-accent-dark);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.refuge-details__links a:hover {
+  text-decoration: underline;
 }
 
 .navigate-button {
@@ -604,10 +764,18 @@ select {
   min-width: 0;
   margin-top: auto;
   border-radius: 13px;
+  text-align: center;
+}
+
+.refuge-details .navigate-button {
+  flex: 0 0 auto;
+  margin-top: 18px;
 }
 
 .filter-pill:focus-visible,
 .quiet-space-card:focus-visible,
+.refuge-details__back:focus-visible,
+.refuge-details__links a:focus-visible,
 .header-brand--button:focus-visible,
 .text-action:focus-visible,
 .summary-list button:focus-visible,

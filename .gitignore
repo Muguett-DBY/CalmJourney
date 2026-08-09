@@ -24,6 +24,10 @@ Thumbs.db
 # wrangler
 .wrangler/
 .dev.vars
+supabase/.temp/
+
+# local inspection output
+tmp/
 
 # local tooling
 .reasonix/
