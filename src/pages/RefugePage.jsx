@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import InnerHeader from '../components/InnerHeader.jsx'
 import RefugeMap from '../components/RefugeMap.jsx'
 import { getNearbyRefuges } from '../services/refugeService.js'
@@ -24,9 +25,13 @@ const filters = [
 ]
 
 export default function RefugePage() {
-  const [location, setLocation] = useState(defaultLocation)
-  const [locationLabel, setLocationLabel] = useState('Melbourne CBD')
-  const [locationMessage, setLocationMessage] = useState('Showing refuges near Melbourne CBD.')
+  const [searchParams] = useSearchParams()
+  const alertLocation = getAlertLocation(searchParams)
+  const [location, setLocation] = useState(alertLocation || defaultLocation)
+  const [locationLabel, setLocationLabel] = useState(alertLocation ? 'the selected alert area' : 'Melbourne CBD')
+  const [locationMessage, setLocationMessage] = useState(
+    alertLocation ? 'Showing refuges near the selected alert area.' : 'Showing refuges near Melbourne CBD.',
+  )
   const [activeFilter, setActiveFilter] = useState('')
   const [walkingMinutes, setWalkingMinutes] = useState(10)
   const [refuges, setRefuges] = useState([])
@@ -263,4 +268,22 @@ export default function RefugePage() {
       </main>
     </div>
   )
+}
+
+function getAlertLocation(searchParams) {
+  if (!searchParams.has('lat') || !searchParams.has('lng')) return null
+
+  const latitude = Number(searchParams.get('lat'))
+  const longitude = Number(searchParams.get('lng'))
+
+  if (
+    !Number.isFinite(latitude)
+    || latitude < -90
+    || latitude > 90
+    || !Number.isFinite(longitude)
+    || longitude < -180
+    || longitude > 180
+  ) return null
+
+  return { latitude, longitude }
 }
