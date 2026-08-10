@@ -1,135 +1,64 @@
-const DEFAULT_THRESHOLD = 700
-const HIGH_RATIO = 1.4
-const MEDIUM_RATIO = 1.1
+const HISTORICAL_WEIGHT = 0.7
+const LIVE_WEIGHT = 0.3
 
-export function classifyCrowdRisk({
-  currentCount,
-  sevenDayAverage,
-  threshold = DEFAULT_THRESHOLD,
-}) {
-  const current = normaliseCount(currentCount)
-  const average = normaliseCount(sevenDayAverage)
-  const safeThreshold = normaliseCount(threshold) || DEFAULT_THRESHOLD
-  const ratio = average > 0 ? current / average : null
-
-  if (current >= safeThreshold || (ratio !== null && ratio >= HIGH_RATIO)) {
+export function classifyCrowdRisk({ predictedCount, mediumThreshold, highThreshold }) {
+  if (predictedCount >= highThreshold) {
     return {
       riskLevel: 'high',
-      sensoryLoad: 'high',
       shouldAlert: true,
-      ratio: formatRatio(ratio),
-      reason: 'Crowd level is significantly higher than the expected baseline.',
+      reason: 'Expected pedestrian activity is above this location\'s busy-hour threshold.',
     }
   }
 
-  if (ratio !== null && ratio >= MEDIUM_RATIO) {
+  if (predictedCount >= mediumThreshold) {
     return {
       riskLevel: 'medium',
-      sensoryLoad: 'medium',
       shouldAlert: false,
-      ratio: formatRatio(ratio),
-      reason: 'Crowd level is slightly higher than the expected baseline.',
+      reason: 'Expected pedestrian activity is around this location\'s usual level.',
     }
   }
 
   return {
     riskLevel: 'low',
-    sensoryLoad: 'low',
     shouldAlert: false,
-    ratio: formatRatio(ratio),
-    reason: 'Crowd level is within the expected baseline.',
+    reason: 'Expected pedestrian activity is below this location\'s usual level.',
   }
 }
 
-export function predictSensoryAlert({
-  sensor,
-  currentCount,
-  sevenDayAverage,
-  threshold = DEFAULT_THRESHOLD,
-}) {
+export function buildCrowdForecast({ sensor, currentCount }) {
+  const historicalAverage = Number(sensor.averageCount)
+  const liveCount = currentCount === null ? null : Number(currentCount)
+  const predictedCount = liveCount === null
+    ? Math.round(historicalAverage)
+    : Math.round(
+      historicalAverage * HISTORICAL_WEIGHT + liveCount * LIVE_WEIGHT,
+    )
   const classification = classifyCrowdRisk({
-    currentCount,
-    sevenDayAverage,
-    threshold,
+    predictedCount,
+    mediumThreshold: Number(sensor.mediumThreshold),
+    highThreshold: Number(sensor.highThreshold),
   })
 
   return {
-    sensorId: sensor?.locationId ?? sensor?.sensorId ?? null,
-    areaName: sensor?.name ?? sensor?.sensorDescription ?? 'Nearby area',
-    lat: sensor?.lat ?? null,
-    lng: sensor?.lng ?? null,
-    distanceMeters: sensor?.distanceMeters ?? null,
-    currentCount: normaliseCount(currentCount),
-    sevenDayAverage: normaliseCount(sevenDayAverage),
+    sensorId: sensor.locationId,
+    areaName: sensor.areaName,
+    lat: Number(sensor.lat),
+    lng: Number(sensor.lng),
+    distanceMeters: Number(sensor.distanceMeters),
+    currentCount: liveCount,
+    predictedCount,
+    historicalAverage: Math.round(historicalAverage),
+    mediumThreshold: Number(sensor.mediumThreshold),
+    highThreshold: Number(sensor.highThreshold),
+    historicalSampleCount: Number(sensor.sampleCount),
     ...classification,
-    message: buildAlertMessage(classification.riskLevel, sensor),
-    recommendedActions: buildRecommendedActions(classification.shouldAlert),
   }
 }
 
-// Backwards-compatible wrapper used by existing scaffold tests.
-export function predictCrowding(historical = [], weather, time) {
-  const counts = historical
-    .map((item) => normaliseCount(item?.totalCount ?? item?.count))
-    .filter((count) => count > 0)
-
-  if (counts.length === 0) {
-    return { level: 'unknown', confidence: 0 }
-  }
-
-  const average = counts.reduce((sum, count) => sum + count, 0) / counts.length
-  const current = counts[counts.length - 1]
-  const result = classifyCrowdRisk({
-    currentCount: current,
-    sevenDayAverage: average,
-  })
-
-  return {
-    level: result.riskLevel,
-    confidence: 0.7,
-    time,
-    weather,
-  }
-}
-
-function buildAlertMessage(riskLevel, sensor) {
-  const areaName = sensor?.name ?? sensor?.sensorDescription ?? 'this area'
-
-  if (riskLevel === 'high') {
-    return `High pedestrian density is likely near ${areaName} within the next hour.`
-  }
-
-  if (riskLevel === 'medium') {
-    return `Pedestrian density near ${areaName} may be higher than usual.`
-  }
-
-  return `Pedestrian density near ${areaName} is currently within the expected range.`
-}
-
-function buildRecommendedActions(shouldAlert) {
-  if (!shouldAlert) return []
-
-  return [
-    {
-      type: 'find_nearby_refuge',
-      label: 'Find nearby quiet place',
-      api: '/api/refuges/nearby',
-    },
-    {
-      type: 'reroute',
-      label: 'Find calmer route',
-      api: '/api/routes/reroute',
-    },
-  ]
-}
-
-function normaliseCount(value) {
-  const number = Number(value)
-  if (!Number.isFinite(number) || number < 0) return 0
-  return number
-}
-
-function formatRatio(ratio) {
-  if (ratio === null) return null
-  return Number(ratio.toFixed(2))
+export function sortCrowdForecasts(forecasts) {
+  const riskOrder = { high: 0, medium: 1, low: 2 }
+  return [...forecasts].sort((left, right) => (
+    riskOrder[left.riskLevel] - riskOrder[right.riskLevel]
+    || left.distanceMeters - right.distanceMeters
+  ))
 }

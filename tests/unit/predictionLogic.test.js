@@ -1,89 +1,91 @@
 import { describe, expect, it } from 'vitest'
 import {
+  buildCrowdForecast,
   classifyCrowdRisk,
-  predictSensoryAlert,
+  sortCrowdForecasts,
 } from '../../server/predictionLogic.js'
 
 describe('predictionLogic', () => {
-  it('classifies high risk when current count exceeds the user threshold', () => {
+  it('classifies a forecast above the busy-hour threshold as high risk', () => {
     const result = classifyCrowdRisk({
-      currentCount: 750,
-      sevenDayAverage: 900,
-      threshold: 700,
+      predictedCount: 900,
+      mediumThreshold: 500,
+      highThreshold: 800,
     })
 
     expect(result.riskLevel).toBe('high')
-    expect(result.sensoryLoad).toBe('high')
     expect(result.shouldAlert).toBe(true)
   })
 
-  it('classifies high risk when the current count is far above the seven-day average', () => {
+  it('classifies a forecast around the usual level as medium risk', () => {
     const result = classifyCrowdRisk({
-      currentCount: 840,
-      sevenDayAverage: 600,
-      threshold: 1000,
-    })
-
-    expect(result.riskLevel).toBe('high')
-    expect(result.ratio).toBe(1.4)
-    expect(result.shouldAlert).toBe(true)
-  })
-
-  it('classifies medium risk when the count is moderately above baseline', () => {
-    const result = classifyCrowdRisk({
-      currentCount: 660,
-      sevenDayAverage: 600,
-      threshold: 1000,
+      predictedCount: 600,
+      mediumThreshold: 500,
+      highThreshold: 800,
     })
 
     expect(result.riskLevel).toBe('medium')
-    expect(result.sensoryLoad).toBe('medium')
     expect(result.shouldAlert).toBe(false)
   })
 
-  it('classifies low risk when the count is within the expected baseline', () => {
+  it('classifies a forecast below the usual level as low risk', () => {
     const result = classifyCrowdRisk({
-      currentCount: 500,
-      sevenDayAverage: 600,
-      threshold: 1000,
+      predictedCount: 400,
+      mediumThreshold: 500,
+      highThreshold: 800,
     })
 
     expect(result.riskLevel).toBe('low')
-    expect(result.sensoryLoad).toBe('low')
-    expect(result.shouldAlert).toBe(false)
   })
 
-  it('handles a zero seven-day average without crashing', () => {
-    const result = classifyCrowdRisk({
-      currentCount: 50,
-      sevenDayAverage: 0,
-      threshold: 700,
-    })
-
-    expect(result.ratio).toBeNull()
-    expect(result.riskLevel).toBe('low')
-  })
-
-  it('includes action options when a high sensory alert is generated', () => {
-    const result = predictSensoryAlert({
+  it('combines the next-hour historical pattern with the current count', () => {
+    const result = buildCrowdForecast({
       sensor: {
         locationId: 3,
-        name: 'Melbourne Central',
-        lat: -37.81101524,
-        lng: 144.96429485,
-        distanceMeters: 310,
+        areaName: 'Melbourne Central',
+        lat: -37.811,
+        lng: 144.964,
+        distanceMeters: 300,
+        averageCount: 1000,
+        mediumThreshold: 700,
+        highThreshold: 1200,
+        sampleCount: 90,
       },
-      currentCount: 900,
-      sevenDayAverage: 600,
-      threshold: 700,
+      currentCount: 1500,
     })
 
-    expect(result.sensorId).toBe(3)
+    expect(result.predictedCount).toBe(1150)
+    expect(result.currentCount).toBe(1500)
     expect(result.areaName).toBe('Melbourne Central')
-    expect(result.shouldAlert).toBe(true)
-    expect(result.recommendedActions.map((action) => action.type)).toEqual([
-      'find_nearby_refuge',
-      'reroute',
+  })
+
+  it('uses the historical pattern when current data is unavailable', () => {
+    const result = buildCrowdForecast({
+      sensor: {
+        locationId: 3,
+        areaName: 'Melbourne Central',
+        lat: -37.811,
+        lng: 144.964,
+        distanceMeters: 300,
+        averageCount: 1000,
+        mediumThreshold: 700,
+        highThreshold: 1200,
+        sampleCount: 90,
+      },
+      currentCount: null,
+    })
+
+    expect(result.predictedCount).toBe(1000)
+    expect(result.currentCount).toBeNull()
+  })
+
+  it('shows high-risk areas before lower-risk areas', () => {
+    const result = sortCrowdForecasts([
+      { riskLevel: 'low', distanceMeters: 100 },
+      { riskLevel: 'high', distanceMeters: 500 },
+      { riskLevel: 'medium', distanceMeters: 200 },
     ])
+
+    expect(result.map((item) => item.riskLevel)).toEqual(['high', 'medium', 'low'])
   })
 })
