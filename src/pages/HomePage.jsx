@@ -39,7 +39,7 @@ export default function HomePage() {
       <main className="landing-main">
         <section className="landing-hero" aria-labelledby="landing-heading">
           <div className="landing-copy">
-            <h1 id="landing-heading">Move through Melbourne<br /> with more certainty</h1>
+            <h1 id="landing-heading">Travel with less stress<br /> Arrive with more calm</h1>
             <p>
               See sensory stressors, find quiet spaces, and receive predictive alerts<br /> before environments become overwhelming.
             </p>
