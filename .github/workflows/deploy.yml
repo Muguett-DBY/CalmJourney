@@ -1,12 +1,17 @@
-name: Deploy to Cloudflare Pages
+name: Check and deploy CalmJourney
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
-  group: pages-deploy
+  group: calmjourney-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -21,8 +26,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
+
+      - name: Use the reviewed npm version
+        run: npm install --global npm@12.0.2
 
       - name: Install dependencies
         run: npm ci
@@ -33,10 +41,15 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+
       - name: Build
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
+        # PRs run all checks without receiving deployment credentials.
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npx wrangler pages deploy dist --project-name=calmjourney --branch=main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
