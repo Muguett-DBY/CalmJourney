@@ -1,5 +1,9 @@
 # CalmJourney
 
+**Archived project.** The source is kept for reference. The live database is
+intentionally paused and automatic deployment is disabled; database-backed
+features are not maintained as an active service.
+
 CalmJourney helps sensory-sensitive commuters find quiet public places and check one-hour pedestrian crowd alerts in Melbourne.
 
 ## Features
@@ -17,4 +21,4 @@ npm run dev
 
 Run checks with `npm test`, `npm run lint` and `npm run build`.
 
-Production: https://calmjourney.custard.top
+Historical frontend: https://calmjourney.custard.top (database-backed features are offline).
