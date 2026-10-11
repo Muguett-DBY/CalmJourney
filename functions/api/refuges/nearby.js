@@ -2,8 +2,10 @@ const refugeTypes = new Set(['park', 'library', 'quiet_public_space'])
 
 export async function onRequestGet({ request, env }) {
   const query = new URL(request.url).searchParams
-  const latitude = Number(query.get('lat'))
-  const longitude = Number(query.get('lng'))
+  const latitudeValue = query.get('lat')
+  const longitudeValue = query.get('lng')
+  const latitude = latitudeValue?.trim() ? Number(latitudeValue) : NaN
+  const longitude = longitudeValue?.trim() ? Number(longitudeValue) : NaN
   const walkingMinutes = Number(query.get('minutes') ?? 10)
   const requestedType = query.get('type') || null
 
@@ -23,25 +25,33 @@ export async function onRequestGet({ request, env }) {
     return Response.json({ error: 'The refuge type is not supported.' }, { status: 400 })
   }
 
-  const response = await fetch(`${env.SUPABASE_URL}/rest/v1/rpc/nearby_refuges`, {
-    method: 'POST',
-    headers: {
-      apikey: env.SUPABASE_PUBLISHABLE_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      user_lat: latitude,
-      user_lng: longitude,
-      max_distance_m: walkingMinutes * 80,
-      requested_type: requestedType,
-    }),
-  })
-
-  const data = await response.json()
-
-  if (!response.ok) {
-    return Response.json({ error: 'Refuge data is temporarily unavailable.' }, { status: 502 })
+  if (!env.SUPABASE_URL || !env.SUPABASE_PUBLISHABLE_KEY) {
+    return Response.json({ error: 'Refuge data is temporarily unavailable.' }, { status: 503 })
   }
 
-  return Response.json({ data })
+  // Keep upstream failures in the JSON error contract expected by the browser.
+  try {
+    const response = await fetch(`${env.SUPABASE_URL}/rest/v1/rpc/nearby_refuges`, {
+      method: 'POST',
+      headers: {
+        apikey: env.SUPABASE_PUBLISHABLE_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_lat: latitude,
+        user_lng: longitude,
+        max_distance_m: walkingMinutes * 80,
+        requested_type: requestedType,
+      }),
+    })
+
+    if (!response.ok) {
+      return Response.json({ error: 'Refuge data is temporarily unavailable.' }, { status: 502 })
+    }
+
+    const data = await response.json()
+    return Response.json({ data })
+  } catch {
+    return Response.json({ error: 'Refuge data is temporarily unavailable.' }, { status: 502 })
+  }
 }
